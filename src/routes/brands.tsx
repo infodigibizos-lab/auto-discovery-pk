@@ -1,0 +1,7 @@
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { ArrowUpRight } from 'lucide-react';
+import { PageIntro } from '@/components/auto/site-shell';
+import { brands, vehicles } from '@/data/vehicles';
+import { pageHead } from '@/lib/seo';
+export const Route=createFileRoute('/brands')({head:()=>pageHead('Car Brands in Pakistan | Motori','Browse established and emerging automotive brands represented in the Pakistani market.'),component:Brands});
+function Brands(){return <><PageIntro eyebrow="THE BRANDS" title="THE NAMES THAT MOVE US." description="From familiar icons to the next wave of mobility. Browse the makers shaping Pakistan's automotive landscape."/><section className="mx-auto max-w-[1600px] px-5 py-12 md:px-12 md:py-20"><div className="grid grid-cols-2 border-l border-t border-border sm:grid-cols-3 lg:grid-cols-4">{brands.map(b=><Link key={b} to="/cars" search={{q:b}} className="group flex min-h-36 flex-col justify-between border-b border-r border-border p-5 transition-colors hover:bg-accent md:p-7"><span className="flex justify-between text-xs text-muted-foreground"><span>{String(brands.indexOf(b)+1).padStart(2,'0')}</span><ArrowUpRight size={17}/></span><div><h2 className="font-display text-3xl font-semibold uppercase md:text-4xl">{b}</h2><p className="mt-1 text-xs text-muted-foreground">{vehicles.filter(v=>v.brand===b).length ? `${vehicles.filter(v=>v.brand===b).length} models listed` : 'Catalog pending'}</p></div></Link>)}</div></section></>}
