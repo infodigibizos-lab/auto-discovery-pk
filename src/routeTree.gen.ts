@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as CarsRouteImport } from './routes/cars'
 import { Route as CompareRouteImport } from './routes/compare'
+import { Route as DealersRouteImport } from './routes/dealers'
 import { Route as EvRouteImport } from './routes/ev'
+import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as NewRouteImport } from './routes/new'
 import { Route as CarsBrandModelRouteImport } from './routes/cars.$brand.$model'
 
@@ -37,9 +39,19 @@ const CompareRoute = CompareRouteImport.update({
   path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DealersRoute = DealersRouteImport.update({
+  id: '/dealers',
+  path: '/dealers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EvRoute = EvRouteImport.update({
   id: '/ev',
   path: '/ev',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceRoute = FinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewRoute = NewRouteImport.update({
@@ -58,7 +70,9 @@ export interface FileRoutesByFullPath {
   '/brands': typeof BrandsRoute
   '/cars': typeof CarsRouteWithChildren
   '/compare': typeof CompareRoute
+  '/dealers': typeof DealersRoute
   '/ev': typeof EvRoute
+  '/finance': typeof FinanceRoute
   '/new': typeof NewRoute
   '/cars/$brand/$model': typeof CarsBrandModelRoute
 }
@@ -67,7 +81,9 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsRoute
   '/cars': typeof CarsRouteWithChildren
   '/compare': typeof CompareRoute
+  '/dealers': typeof DealersRoute
   '/ev': typeof EvRoute
+  '/finance': typeof FinanceRoute
   '/new': typeof NewRoute
   '/cars/$brand/$model': typeof CarsBrandModelRoute
 }
@@ -77,7 +93,9 @@ export interface FileRoutesById {
   '/brands': typeof BrandsRoute
   '/cars': typeof CarsRouteWithChildren
   '/compare': typeof CompareRoute
+  '/dealers': typeof DealersRoute
   '/ev': typeof EvRoute
+  '/finance': typeof FinanceRoute
   '/new': typeof NewRoute
   '/cars/$brand/$model': typeof CarsBrandModelRoute
 }
@@ -88,7 +106,9 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cars'
     | '/compare'
+    | '/dealers'
     | '/ev'
+    | '/finance'
     | '/new'
     | '/cars/$brand/$model'
   fileRoutesByTo: FileRoutesByTo
@@ -97,7 +117,9 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cars'
     | '/compare'
+    | '/dealers'
     | '/ev'
+    | '/finance'
     | '/new'
     | '/cars/$brand/$model'
   id:
@@ -106,7 +128,9 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cars'
     | '/compare'
+    | '/dealers'
     | '/ev'
+    | '/finance'
     | '/new'
     | '/cars/$brand/$model'
   fileRoutesById: FileRoutesById
@@ -116,7 +140,9 @@ export interface RootRouteChildren {
   BrandsRoute: typeof BrandsRoute
   CarsRoute: typeof CarsRouteWithChildren
   CompareRoute: typeof CompareRoute
+  DealersRoute: typeof DealersRoute
   EvRoute: typeof EvRoute
+  FinanceRoute: typeof FinanceRoute
   NewRoute: typeof NewRoute
 }
 
@@ -150,11 +176,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dealers': {
+      id: '/dealers'
+      path: '/dealers'
+      fullPath: '/dealers'
+      preLoaderRoute: typeof DealersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ev': {
       id: '/ev'
       path: '/ev'
       fullPath: '/ev'
       preLoaderRoute: typeof EvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance': {
+      id: '/finance'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof FinanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/new': {
@@ -189,7 +229,9 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsRoute: BrandsRoute,
   CarsRoute: CarsRouteWithChildren,
   CompareRoute: CompareRoute,
+  DealersRoute: DealersRoute,
   EvRoute: EvRoute,
+  FinanceRoute: FinanceRoute,
   NewRoute: NewRoute,
 }
 export const routeTree = rootRouteImport
