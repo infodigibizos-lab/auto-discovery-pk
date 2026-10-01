@@ -1,0 +1,8 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { Zap } from 'lucide-react';
+import { PageIntro } from '@/components/auto/site-shell';
+import { VehicleCard } from '@/components/auto/vehicle-card';
+import { imagery, vehicles } from '@/data/vehicles';
+import { pageHead } from '@/lib/seo';
+export const Route=createFileRoute('/ev')({head:()=>pageHead('Electric Cars in Pakistan | Motori','Discover electric cars and compare EV models available for exploration in Pakistan.'),component:EV});
+function EV(){const electrics=vehicles.filter(v=>v.fuelType==='Electric');return <><PageIntro eyebrow="THE EV HUB" title="ELECTRIC CHANGES EVERYTHING." description="Explore the new generation of electric vehicles. Range, charging and battery details are shown only when verified."/><section className="grid bg-ink text-ink-foreground lg:grid-cols-2"><img src={imagery.ev} alt="Illustrative electric sedan" className="h-full min-h-80 w-full object-cover"/><div className="flex flex-col justify-center p-8 md:p-16"><Zap className="mb-6 text-signal" size={30}/><h2 className="display-heading text-5xl md:text-7xl">THE FUTURE<br/>IS IN MOTION.</h2><p className="mt-6 max-w-md text-sm leading-7 opacity-70">Explore electric models with an eye on what matters: usable range, charging, performance and everyday practicality. Verify exact figures with the manufacturer.</p></div></section><section className="mx-auto max-w-[1600px] px-5 py-16 md:px-12 md:py-24"><p className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">THE ELECTRIC LINEUP</p><h2 className="display-heading mb-10 text-6xl">EXPLORE EVS.</h2><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{electrics.map(v=><VehicleCard key={v.id} vehicle={v}/>)}</div></section></>}
