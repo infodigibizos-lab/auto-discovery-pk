@@ -42,9 +42,10 @@ export const vehicles: Vehicle[] = rows.map(([brand, model, category, fuelType, 
   statuses: statuses as Vehicle['statuses'],
   description: `Explore the ${brand} ${model} in Pakistan. Contact an authorised dealer to confirm the latest price, specifications and availability.`,
 }));
-export const upcoming: Vehicle[] = [
+const upcomingRows: Array<[string, string, string]> = [
   ['Changan','Lumin','Hatchback'],['Geely','EX2','SUV'],['Geely','EX5','SUV'],['Avatr','11','SUV'],['Deepal','S09','SUV'],['iCAUR','V23','SUV'],['Jetour','T1','SUV']
-].map(([brand,model,category]) => ({
+];
+export const upcoming: Vehicle[] = upcomingRows.map(([brand,model,category]) => ({
   id: `${brand}-${model}`.toLowerCase().replace(/[^a-z0-9]+/g,'-'), brand, model, category,
   statuses: ['UPCOMING'], availabilityStatus:'Expected; not confirmed', bookingStatus:'Coming soon',
   description: `The ${brand} ${model} is listed as an expected arrival. Timing, specifications and pricing should be verified with an official source.`,
