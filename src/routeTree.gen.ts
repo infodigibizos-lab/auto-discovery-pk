@@ -12,9 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as CarsRouteImport } from './routes/cars'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as EvRouteImport } from './routes/ev'
 import { Route as NewRouteImport } from './routes/new'
-import { Route as CarsRouteImport } from './routes/cars..'
+import { Route as CarsBrandModelRouteImport } from './routes/cars.$brand.$model'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,6 +32,11 @@ const CarsRoute = CarsRouteImport.update({
   path: '/cars',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EvRoute = EvRouteImport.update({
   id: '/ev',
   path: '/ev',
@@ -41,9 +47,9 @@ const NewRoute = NewRouteImport.update({
   path: '/new',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CarsRoute = CarsRouteImport.update({
-  id: '/',
-  path: '/',
+const CarsBrandModelRoute = CarsBrandModelRouteImport.update({
+  id: '/$brand/$model',
+  path: '/$brand/$model',
   getParentRoute: () => CarsRoute,
 } as any)
 
@@ -51,38 +57,65 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/brands': typeof BrandsRoute
   '/cars': typeof CarsRouteWithChildren
+  '/compare': typeof CompareRoute
   '/ev': typeof EvRoute
   '/new': typeof NewRoute
-  '/cars/': typeof CarsRoute
+  '/cars/$brand/$model': typeof CarsBrandModelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/brands': typeof BrandsRoute
+  '/cars': typeof CarsRouteWithChildren
+  '/compare': typeof CompareRoute
   '/ev': typeof EvRoute
   '/new': typeof NewRoute
-  '/cars': typeof CarsRoute
+  '/cars/$brand/$model': typeof CarsBrandModelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/brands': typeof BrandsRoute
   '/cars': typeof CarsRouteWithChildren
+  '/compare': typeof CompareRoute
   '/ev': typeof EvRoute
   '/new': typeof NewRoute
-  '/cars/': typeof CarsRoute
+  '/cars/$brand/$model': typeof CarsBrandModelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/brands' | '/cars' | '/ev' | '/new' | '/cars/'
+  fullPaths:
+    | '/'
+    | '/brands'
+    | '/cars'
+    | '/compare'
+    | '/ev'
+    | '/new'
+    | '/cars/$brand/$model'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/brands' | '/ev' | '/new' | '/cars'
-  id: '__root__' | '/' | '/brands' | '/cars' | '/ev' | '/new' | '/cars/'
+  to:
+    | '/'
+    | '/brands'
+    | '/cars'
+    | '/compare'
+    | '/ev'
+    | '/new'
+    | '/cars/$brand/$model'
+  id:
+    | '__root__'
+    | '/'
+    | '/brands'
+    | '/cars'
+    | '/compare'
+    | '/ev'
+    | '/new'
+    | '/cars/$brand/$model'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BrandsRoute: typeof BrandsRoute
   CarsRoute: typeof CarsRouteWithChildren
+  CompareRoute: typeof CompareRoute
   EvRoute: typeof EvRoute
   NewRoute: typeof NewRoute
 }
@@ -110,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ev': {
       id: '/ev'
       path: '/ev'
@@ -124,22 +164,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cars/': {
-      id: '/cars/'
-      path: '/'
-      fullPath: '/cars/'
-      preLoaderRoute: typeof CarsRouteImport
+    '/cars/$brand/$model': {
+      id: '/cars/$brand/$model'
+      path: '/$brand/$model'
+      fullPath: '/cars/$brand/$model'
+      preLoaderRoute: typeof CarsBrandModelRouteImport
       parentRoute: typeof CarsRoute
     }
   }
 }
 
 interface CarsRouteChildren {
-  CarsRoute: typeof CarsRoute
+  CarsBrandModelRoute: typeof CarsBrandModelRoute
 }
 
 const CarsRouteChildren: CarsRouteChildren = {
-  CarsRoute: CarsRoute,
+  CarsBrandModelRoute: CarsBrandModelRoute,
 }
 
 const CarsRouteWithChildren = CarsRoute._addFileChildren(CarsRouteChildren)
@@ -148,6 +188,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BrandsRoute: BrandsRoute,
   CarsRoute: CarsRouteWithChildren,
+  CompareRoute: CompareRoute,
   EvRoute: EvRoute,
   NewRoute: NewRoute,
 }
