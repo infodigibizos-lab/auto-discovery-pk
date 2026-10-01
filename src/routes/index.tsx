@@ -1,24 +1,35 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { ArrowDown, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CatalogGrid } from '@/components/auto/catalog-grid';
+import { brands, imagery } from '@/data/vehicles';
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
+export const Route = createFileRoute('/')({
+ head:()=>({meta:[{title:'Motori — Discover cars in Pakistan'},{name:'description',content:'Explore cars, compare models and discover the next generation of mobility in Pakistan.'},{property:'og:title',content:'Motori — Discover cars in Pakistan'},{property:'og:description',content:'Explore cars, compare models and discover mobility in Pakistan.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),
+ component:Home,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+const slides=[
+ {brand:'THE NEW PERSPECTIVE',model:'DRIVE WHAT’S NEXT.',caption:'A more considered way to find your next car.',image:imagery.showroom,tag:'THE DIGITAL SHOWROOM'},
+ {brand:'BUILT FOR THE JOURNEY',model:'GO BEYOND.',caption:'Discover SUVs made for every kind of road.',image:imagery.suv,tag:'EXPLORE SUVS'},
+ {brand:'THE ELECTRIC ERA',model:'MOVE DIFFERENTLY.',caption:'A new generation of electric mobility.',image:imagery.ev,tag:'EXPLORE ELECTRIC'},
+ {brand:'FIND YOUR FIT',model:'YOUR DRIVE. YOUR WAY.',caption:'From city cars to family favorites.',image:imagery.showroom,tag:'DISCOVER MORE'},
+ {brand:'A NEW DIRECTION',model:'THE ROAD IS OPEN.',caption:'See what is coming to Pakistan.',image:imagery.suv,tag:'COMING SOON'},
+];
+function Home(){
+ const [active,setActive]=useState(0),[search,setSearch]=useState(''); const navigate=useNavigate();
+ useEffect(()=>{const timer=window.setInterval(()=>setActive(n=>(n+1)%slides.length),6000);return()=>clearInterval(timer)},[]);
+ const move=(delta:number)=>setActive(n=>(n+delta+slides.length)%slides.length);
+ const current=slides[active]; let startX=0;
+ return <>
+ <section className="relative min-h-[100svh] overflow-hidden bg-ink text-ink-foreground" aria-label="Featured automotive stories" onKeyDown={e=>{if(e.key==='ArrowRight')move(1);if(e.key==='ArrowLeft')move(-1)}} onTouchStart={e=>{startX=e.touches[0].clientX}} onTouchEnd={e=>{const distance=e.changedTouches[0].clientX-startX;if(Math.abs(distance)>60)move(distance<0?1:-1)}} tabIndex={0}>
+  {slides.map((s,i)=><img key={i} src={s.image} alt="Illustrative premium automotive scene" className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${i===active?'opacity-100':'opacity-0'}`} fetchPriority={i===0?'high':undefined}/>)}<div className="hero-shade absolute inset-0"/>
+  <div className="relative mx-auto flex min-h-[100svh] max-w-[1760px] flex-col justify-end px-5 pb-8 pt-32 md:px-12 md:pb-11 xl:px-14"><div className="mb-7 max-w-4xl md:mb-12"><div className="reveal-in mb-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.22em] text-signal" key={`tag-${active}`}><span className="h-px w-8 bg-signal"/>{current.tag}</div><p className="mb-2 text-xs font-bold uppercase tracking-[.2em] opacity-80">{current.brand}</p><h1 key={`title-${active}`} className="display-heading reveal-in max-w-4xl text-[clamp(4rem,10vw,10rem)]">{current.model}</h1><p className="mt-5 max-w-md text-sm leading-6 opacity-85 md:text-base">{current.caption}</p><div className="mt-7 flex flex-wrap gap-2"><Button asChild variant="signal" size="lg" className="h-12"><Link to={active===2?'/ev':active===4?'/new':'/cars'}>Explore cars <ArrowUpRight/></Link></Button><Button asChild variant="inverse" size="lg" className="h-12"><Link to="/compare">Compare models <ArrowRight/></Link></Button></div></div>
+  <div className="grid gap-5 border-t border-line pt-5 md:grid-cols-[1fr_auto] md:items-end"><form onSubmit={e=>{e.preventDefault();navigate({to:'/cars',search:{q:search}})}} className="flex w-full max-w-[710px] flex-col gap-2 bg-background p-2 text-foreground sm:flex-row sm:items-center"><div className="flex min-w-0 flex-1 items-center gap-3 px-3"><Search size={18} className="shrink-0 text-muted-foreground"/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search a make or model" aria-label="Search a make or model" className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"/></div><Button variant="signal" type="submit" className="h-11 shrink-0 px-6">Find my car <ArrowRight/></Button></form><div className="flex items-center justify-between gap-8"><div className="flex items-center gap-2"><Button variant="inverse" size="icon" className="size-11" aria-label="Previous story" onClick={()=>move(-1)}><ChevronLeft/></Button><Button variant="inverse" size="icon" className="size-11" aria-label="Next story" onClick={()=>move(1)}><ChevronRight/></Button></div><div className="min-w-28 text-xs font-bold tabular-nums">0{active+1} <span className="opacity-50">/ 0{slides.length}</span><div className="mt-2 h-px bg-line"><div key={active} className="progress-run h-px bg-signal"/></div></div></div></div><div className="mt-4 flex items-center justify-between text-[10px] uppercase tracking-widest opacity-65"><span>Imagery is illustrative</span><span className="flex items-center gap-2">Scroll to discover <ArrowDown size={14}/></span></div></div>
+ </section>
+ <section className="px-5 py-16 md:px-12 md:py-24"><div className="mx-auto max-w-[1600px]"><div className="mb-10 flex flex-wrap items-end justify-between gap-5"><div><p className="mb-3 text-xs font-bold uppercase tracking-[.2em] text-muted-foreground">01 / THE EXPLORER</p><h2 className="display-heading text-6xl md:text-8xl">Find your<br/>next car<span className="text-signal">.</span></h2></div><p className="max-w-xs text-sm leading-6 text-muted-foreground">Discover the models shaping Pakistan's roads. Find the right fit for the way you move.</p></div><CatalogGrid compact/></div></section>
+ <section className="grid bg-ink text-ink-foreground lg:grid-cols-2"><div className="relative min-h-[420px] overflow-hidden lg:min-h-[650px]"><img src={imagery.ev} loading="lazy" alt="Illustrative electric vehicle" className="editorial-image absolute inset-0 h-full w-full"/><span className="absolute bottom-4 left-5 bg-ink/75 px-2 py-1 text-[10px] uppercase backdrop-blur-sm">Illustrative image</span></div><div className="flex flex-col justify-center px-7 py-16 md:px-14 lg:px-20"><p className="mb-5 text-xs font-bold uppercase tracking-[.2em] text-signal">02 / ELECTRIC FUTURE</p><h2 className="display-heading text-6xl md:text-8xl">THE NEXT<br/>CURRENT.</h2><p className="mt-7 max-w-md text-sm leading-7 opacity-70">Electric mobility is changing the way Pakistan moves. Explore models, compare what matters, and find your place in the shift.</p><Button asChild variant="signal" className="mt-9 h-12 self-start"><Link to="/ev">Explore electric <ArrowUpRight/></Link></Button></div></section>
+ <section className="px-5 py-16 md:px-12 md:py-24"><div className="mx-auto max-w-[1600px]"><div className="mb-8 flex flex-wrap items-end justify-between gap-4"><div><p className="mb-3 text-xs font-bold uppercase tracking-[.2em] text-muted-foreground">03 / THE MAKERS</p><h2 className="display-heading text-6xl md:text-8xl">A WORLD OF<br/>MOTION.</h2></div><Button asChild variant="outline"><Link to="/brands">Explore brands <ArrowUpRight/></Link></Button></div><div className="grid grid-cols-2 border-l border-t border-border sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">{brands.slice(0,12).map(b=><Link key={b} to="/cars" search={{q:b}} className="group flex min-h-28 items-center justify-between border-b border-r border-border p-5 transition-colors hover:bg-accent"><span className="font-display text-2xl font-semibold uppercase">{b}</span><ArrowUpRight size={16} className="opacity-30 transition-opacity group-hover:opacity-100"/></Link>)}</div></div></section>
+ <section className="relative min-h-[540px] overflow-hidden bg-ink text-ink-foreground"><img src={imagery.suv} loading="lazy" alt="Illustrative SUV in a mountainous landscape" className="absolute inset-0 h-full w-full object-cover"/><div className="hero-shade-light absolute inset-0"/><div className="relative mx-auto flex min-h-[540px] max-w-[1600px] flex-col justify-center px-5 py-16 md:px-12"><p className="mb-5 text-xs font-bold uppercase tracking-[.2em] text-signal">04 / ON THE HORIZON</p><h2 className="display-heading max-w-2xl text-6xl md:text-8xl">WHAT'S<br/>NEXT?</h2><p className="mt-6 max-w-md text-sm leading-6 opacity-80">A look at the names and new arrivals generating conversation. Expected launches are not confirmed dates.</p><Button asChild variant="signal" className="mt-8 h-12 self-start"><Link to="/new">See upcoming cars <ArrowUpRight/></Link></Button></div></section>
+ </>;
 }
