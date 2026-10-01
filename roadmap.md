@@ -1,0 +1,3 @@
+- [x] Establish automotive design system and architecture.
+- [ ] Build responsive home, catalog, brand, EV, launch, detail, comparison, finance, and dealer experiences.
+- [ ] Verify navigation and core interactions in the preview.
